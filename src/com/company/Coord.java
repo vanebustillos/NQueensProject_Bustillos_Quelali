@@ -5,6 +5,7 @@ import java.util.Objects;
 public class Coord {
         int row;
         int column;
+
     public Coord(int row, int column) {
         this.row = row;
         this.column = column;
