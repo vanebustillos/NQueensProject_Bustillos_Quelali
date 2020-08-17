@@ -16,6 +16,7 @@ public class Board {
 
      public void initBoard(){
         Random random = new Random();
+        //Board startBoard = new Board(size);
         int xRandom  = random.nextInt((size - 1));
         int yRandom = random.nextInt(size - 1);
         if (size >= 4){
@@ -27,15 +28,7 @@ public class Board {
             board[xRandom][yRandom] = 'Q'; // board[column][file]
             Coord queen = new Coord(xRandom,yRandom);
             saveNotAvailablePosition(queen);
-            for ( Coord notAvailablePos : notAvailablePositions) {
-                if(!queen.equals(notAvailablePos)) {
-                    board[notAvailablePos.row][notAvailablePos.column] = 'x';
-                }
-            }
             printBoard();
-            //System.out.println( "x :" + xRandom + "y:" +yRandom );
-
-
         }
          else{
              throw new NullPointerException("La dimensión debe ser mayor o igual a 4.");
@@ -52,44 +45,44 @@ public class Board {
          }
          System.out.println("+-----".repeat(size) + "+" );
      }
-    /*private void searchAvailablePositions() {
-        for(int i = 0; i < size; i++) {
-            for(int j = 0; i < size; j++) {
-               if( board[i][j] == ' ') {
-
-               }
-            }
-        }
-    }
-    private void searchSolution() {
-        for(int i = 0; i < size; i++) {
-            for(int j = 0; i < size; j++) {
-            }
-        }
-
-     }*/
-
      private void saveNotAvailablePosition(Coord queen) {
          int column = queen.column;
-         int row = queen.row; //3
-         //int columnInf = queen.column;
-         //int rowInf = queen.row;
+         int row = queen.row;
 
          for (int i = 0; i < size; i++) {
-             notAvailablePositions.add(new Coord(queen.row, i)); //vertical
-             notAvailablePositions.add(new Coord(i, queen.column)); // horizontal
+             Coord cordRow = new Coord(queen.row, i);
+             Coord cordColumn = new Coord(i, queen.column);
+             notAvailablePositions.add(cordRow); //vertical
+             notAvailablePositions.add(cordColumn); // horizontal
+
+             if(!queen.equals(cordRow)){
+                 board[queen.row][i] = 'X';
+             }
+             if(!queen.equals(cordColumn)){
+                 board[i][queen.column] = 'X';
+             }
+
 
          }
          while (column >= 0 && row >= 0) { //Superior izquierdo
-             notAvailablePositions.add(new Coord(row, column));
+             Coord topLeft = new Coord(row,column);
+             notAvailablePositions.add(topLeft);
+             if(!queen.equals(topLeft)) {
+                 board[row][column] = 'X';
+             }
              column--;
              row--;
          }
          column = queen.column;
          row = queen.row;
 
-         while (column < size - 1 && row <= size - 1) { // Inferior derecho
-             notAvailablePositions.add(new Coord(row, column));
+         while (column <= size - 1 && row <= size - 1) { // Inferior derecho
+             Coord lowerRight = new Coord(row,column);
+             notAvailablePositions.add(lowerRight);
+
+             if(!queen.equals(lowerRight)) {
+                 board[row][column] = 'X';
+             }
              column++;
              row++;
          }
@@ -98,7 +91,11 @@ public class Board {
          row = queen.row;
 
          while (column >= 0 && row <= size -1) { // inferior izquierdo
-             notAvailablePositions.add(new Coord(row, column));
+             Coord lowerLeft = new Coord(row,column);
+             notAvailablePositions.add(lowerLeft);
+             if(!queen.equals(lowerLeft)) {
+                 board[row][column] = 'X';
+             }
              column--;
              row++;
          }
@@ -107,8 +104,11 @@ public class Board {
          row = queen.row;
 
          while (column <= size - 1 && row >= 0) { //superior derecho
-             System.out.println("columna: " + column + "fila: " + row);
+             Coord topRight = new Coord(row,column);
              notAvailablePositions.add(new Coord(row, column));
+             if(!queen.equals(topRight)) {
+                 board[row][column] = 'X';
+             }
              column++;
              row--;
 
