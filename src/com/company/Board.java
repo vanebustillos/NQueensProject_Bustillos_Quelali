@@ -25,13 +25,17 @@ public class Board {
                 }
             }
             board[xRandom][yRandom] = 'Q'; // board[column][file]
-            printBoard();
-            System.out.println( "x :" + xRandom + "y:" +yRandom );
             Coord queen = new Coord(xRandom,yRandom);
             saveNotAvailablePosition(queen);
-            for (Coord notAvailable: notAvailablePositions) {
-                System.out.println(notAvailable);
+            for ( Coord notAvailablePos : notAvailablePositions) {
+                if(!queen.equals(notAvailablePos)) {
+                    board[notAvailablePos.row][notAvailablePos.column] = 'x';
+                }
             }
+            printBoard();
+            //System.out.println( "x :" + xRandom + "y:" +yRandom );
+
+
         }
          else{
              throw new NullPointerException("La dimensión debe ser mayor o igual a 4.");
@@ -66,46 +70,49 @@ public class Board {
      }*/
 
      private void saveNotAvailablePosition(Coord queen) {
-        int columnSup = queen.column;
-        int rowSup = queen.row; //3
-        int columnInf = queen.column;
-        int rowInf = queen.row;
+         int column = queen.column;
+         int row = queen.row; //3
+         //int columnInf = queen.column;
+         //int rowInf = queen.row;
 
-        for(int i = 0; i < size ; i++){
-            notAvailablePositions.add(new Coord(queen.row, i)); //vertical
-            notAvailablePositions.add(new Coord(i, queen.column)); // horizontal
+         for (int i = 0; i < size; i++) {
+             notAvailablePositions.add(new Coord(queen.row, i)); //vertical
+             notAvailablePositions.add(new Coord(i, queen.column)); // horizontal
 
-        }
-        while((columnSup >= 0 && rowSup >= 0) || (columnInf < size -1 && rowInf < size - 1)) {
-            notAvailablePositions.add(new Coord(rowSup, columnSup));
-            notAvailablePositions.add(new Coord(rowInf, columnInf));
-            columnSup--;
-            rowSup--;
-            columnInf++;
-            rowInf++;
+         }
+         while (column >= 0 && row >= 0) { //Superior izquierdo
+             notAvailablePositions.add(new Coord(row, column));
+             column--;
+             row--;
+         }
+         column = queen.column;
+         row = queen.row;
 
-           // System.out.println("Sub:¨" + columnSup + " " + rowSup);
-           // System.out.println("Inf:¨" + columnInf + " " + rowInf);
+         while (column < size - 1 && row <= size - 1) { // Inferior derecho
+             notAvailablePositions.add(new Coord(row, column));
+             column++;
+             row++;
+         }
 
-        }
+         column = queen.column;
+         row = queen.row;
 
-        columnSup = queen.column;
-        rowSup = queen.row;
-        columnInf = queen.column;
-        rowInf = queen.row;
+         while (column >= 0 && row <= size -1) { // inferior izquierdo
+             notAvailablePositions.add(new Coord(row, column));
+             column--;
+             row++;
+         }
 
-         while ((columnSup < size -1 && rowSup >=0) || (columnInf >=0  && rowInf < size -1 )) {
+         column = queen.column;
+         row = queen.row;
 
-             notAvailablePositions.add(new Coord(rowInf, columnInf));
-             notAvailablePositions.add(new Coord(rowSup, columnSup));
-             columnSup++;
-             rowSup--;
-             columnInf--;
-             rowInf++;
+         while (column <= size - 1 && row >= 0) { //superior derecho
+             System.out.println("columna: " + column + "fila: " + row);
+             notAvailablePositions.add(new Coord(row, column));
+             column++;
+             row--;
 
-            System.out.println("Sub:¨" + columnSup + " " + rowSup);
-            System.out.println("Inf:¨" + columnInf + " " + rowInf);
-        }
+         }
      }
 
 }
