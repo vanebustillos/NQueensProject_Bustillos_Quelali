@@ -6,45 +6,40 @@ public class Board {
 
     char [][] board;
     int size;
-    
     Set<Coord> notAvailablePositions = new HashSet<>();
-    List<Coord> queens;
+    int nQueens = 0;
+
     public Board(int size){
          board = new char [size][size];
          this.size = size;
      }
 
      public void initBoard(){
-        Random random = new Random();
-        //Board startBoard = new Board(size);
-        int xRandom  = random.nextInt((size - 1));
-        int yRandom = random.nextInt(size - 1);
         if (size >= 4){
             for(int i = 0; i < size; i++){
                 for(int j= 0; j < size; j++){
                     board[i][j] = ' ';
                 }
             }
-            board[xRandom][yRandom] = 'Q'; // board[column][file]
-            Coord queen = new Coord(xRandom,yRandom);
-            saveNotAvailablePosition(queen);
+            System.out.println("Init game!");
             printBoard();
         }
          else{
-             throw new NullPointerException("La dimensión debe ser mayor o igual a 4.");
+             throw new NullPointerException("The dimension must be at least 4.");
         }
      }
 
-     public void printBoard(){
+     private void printBoard(){
          for(int i = 0; i < size; i++){
-             System.out.println("+-----".repeat(size) + "+" );
+             System.out.println("+-----".repeat(size) + "|" );
              for(int j= 0; j < size; j++){
-                 System.out.print("+  " + board[i][j]+ "  " );
+                 System.out.print("|  " + board[i][j]+ "  " );
              }
              System.out.println("+" );
          }
          System.out.println("+-----".repeat(size) + "+" );
      }
+
      private void saveNotAvailablePosition(Coord queen) {
          int column = queen.column;
          int row = queen.row;
@@ -61,8 +56,6 @@ public class Board {
              if(!queen.equals(cordColumn)){
                  board[i][queen.column] = 'X';
              }
-
-
          }
          while (column >= 0 && row >= 0) { //Superior izquierdo
              Coord topLeft = new Coord(row,column);
@@ -115,4 +108,54 @@ public class Board {
          }
      }
 
+     public void setQueens2(){
+        Random random = new Random();
+        List<Integer> possibleChildRow = new ArrayList(size);
+        List<Integer> possibleChildColumn = new ArrayList(size);
+
+        for (int i = 0; i < size; i++){
+            possibleChildRow.add(i);
+            possibleChildColumn.add(i);
+        }
+
+        while(nQueens <= size){
+            Collections.shuffle(possibleChildRow);
+            Collections.shuffle(possibleChildColumn);
+
+            if(!notAvailablePositions.contains(new Coord(possibleChildRow.get(0),possibleChildColumn.get(0)))){
+               Coord child = new Coord(possibleChildRow.remove(0),possibleChildColumn.remove(0));
+               saveNotAvailablePosition(child);
+               board[child.row][child.column] = 'Q';
+               nQueens++;
+               System.out.println(nQueens + "° queen inserted.");
+               System.out.println(notAvailablePositions.size() + " positions are not available.");
+               printBoard();
+            }
+        }
+
+     }
+    public void setQueens(){
+        Random random = new Random();
+        int rowChild, columnChild;
+        List occupiedColumns = new ArrayList(size);
+
+        while(nQueens <= size){
+
+           rowChild = random.nextInt(size - 1);
+           columnChild = random.nextInt(size - 1);
+
+
+           Coord child = new Coord(rowChild,columnChild);
+              if(!notAvailablePositions.contains(child)){
+                    saveNotAvailablePosition(child);
+                    board[child.row][child.column] = 'Q';
+                    nQueens++;
+                    occupiedColumns.add(child.column);
+                    System.out.println(nQueens + "° queen inserted.");
+                    System.out.println(notAvailablePositions.size() + " positions are not available.");
+                    printBoard();
+                }
+        }
+
+    }
 }

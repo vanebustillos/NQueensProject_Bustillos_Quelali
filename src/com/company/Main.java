@@ -1,6 +1,5 @@
 package com.company;
 
-import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
@@ -10,8 +9,12 @@ public class Main {
         System.out.println("Ingrese el tamaño del tablero : ");
         int size = scanner.nextInt();
 
-       Board board = new Board(size);
-       board.initBoard();
+        if(size >= 4){
+            Board board = new Board(size);
+            board.initBoard();
+            board.setQueens();
+        }
+
 
     }
 }
