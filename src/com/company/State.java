@@ -1,14 +1,14 @@
 package com.company;
 
 public class State {
-    public State(Coord queen, Board actualBoard, Board lastBoard) {
+    Coord queen;
+    Board currentBoard;
+    Board lastBoard;
+
+    public State(Coord queen, Board currentBoard, Board lastBoard) {
         this.queen = queen;
-        this.actualBoard = actualBoard;
+        this.currentBoard = currentBoard;
         this.lastBoard = lastBoard;
     }
-
-    Coord queen;
-    Board actualBoard;
-    Board lastBoard;
 
 }

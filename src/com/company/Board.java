@@ -7,20 +7,13 @@ public class Board {
     char[][] board;
     int size;
     Set<Coord> notAvailablePositions = new HashSet<>();
-    int nQueens = 0;
-    List<Integer> possibleChildRow;
-    List<Integer> possibleChildColumn;
+    char [] leftDiagonal = new char[Integer.MAX_VALUE];
+    char [] rightDiagonal = new char[Integer.MAX_VALUE];
+    char [] availableColumns = new char[Integer.MAX_VALUE];
 
     public Board(int size) {
         board = new char[size][size];
         this.size = size;
-        possibleChildRow = new ArrayList(size);
-        possibleChildColumn = new ArrayList(size);
-
-        for (int i = 0; i < size; i++) {
-            possibleChildRow.add(i);
-            possibleChildColumn.add(i);
-        }
     }
 
     public void initBoard() {
@@ -46,6 +39,38 @@ public class Board {
             System.out.println("+");
         }
         System.out.println("+-----".repeat(size) + "+");
+    }
+
+    private void saveNotAvailablePosition2(Coord queen) {
+        int column = queen.column;
+        int row = queen.row;
+
+        for (int i = 0; i < size; i++) {
+        }
+
+        while (column >= 0 && row <= size - 1) { // inferior izquierdo
+            Coord lowerLeft = new Coord(row, column);
+            notAvailablePositions.add(lowerLeft);
+            if (!queen.equals(lowerLeft)) {
+                board[row][column] = 'X';
+            }
+            column--;
+            row++;
+        }
+
+        column = queen.column;
+        row = queen.row;
+
+        while (column <= size - 1 && row >= 0) { //superior derecho
+            Coord topRight = new Coord(row, column);
+            notAvailablePositions.add(new Coord(row, column));
+            if (!queen.equals(topRight)) {
+                board[row][column] = 'X';
+            }
+            column++;
+            row--;
+
+        }
     }
 
     private void saveNotAvailablePosition(Coord queen) {
@@ -115,123 +140,4 @@ public class Board {
 
         }
     }
-
-    public void setQueens() {
-
-        while (nQueens <= size) {
-
-            Collections.shuffle(possibleChildRow);
-            Collections.shuffle(possibleChildColumn);
-            if (notAvailablePositions.size() == size * size && nQueens < size) {
-
-            }
-
-            if (!notAvailablePositions.contains(new Coord(possibleChildRow.get(0), possibleChildColumn.get(0)))) {
-                Coord child = new Coord(possibleChildRow.remove(0), possibleChildColumn.remove(0));
-                saveNotAvailablePosition(child);
-                board[child.row][child.column] = 'Q';
-                nQueens++;
-                System.out.println(nQueens + "° queen inserted.");
-                System.out.println(notAvailablePositions.size() + " positions are not available.");
-                printBoard();
-            }
-        }
-
-    }
-
-    public void setQueens1() {
-        List<Integer> possibleChildRow = new ArrayList(size);
-        List<Integer> possibleChildColumn = new ArrayList(size);
-
-        for (int i = 0; i < size; i++) {
-            possibleChildRow.add(i);
-            possibleChildColumn.add(i);
-        }
-
-        while (nQueens <= size) {
-            Collections.shuffle(possibleChildRow);
-            Collections.shuffle(possibleChildColumn);
-
-            if (!notAvailablePositions.contains(new Coord(possibleChildRow.get(0), possibleChildColumn.get(0)))) {
-                Coord child = new Coord(possibleChildRow.remove(0), possibleChildColumn.remove(0));
-                saveNotAvailablePosition(child);
-                board[child.row][child.column] = 'Q';
-                nQueens++;
-                System.out.println(nQueens + "° queen inserted.");
-                System.out.println(notAvailablePositions.size() + " positions are not available.");
-                printBoard();
-            }
-        }
-
-    }
-/*
-    public void setQueens2() {
-        Random random = new Random();
-        int rowChild, columnChild;
-        //List occupiedColumns = new ArrayList(size);
-
-        while (nQueens <= size) {
-
-            rowChild = random.nextInt(size - 1);
-            columnChild = random.nextInt(size - 1);
-
-
-            Coord child = new Coord(rowChild, columnChild);
-            if (!notAvailablePositions.contains(child)) {
-                saveNotAvailablePosition(child);
-                board[child.row][child.column] = 'Q';
-                nQueens++;
-                //occupiedColumns.add(child.column);
-                System.out.println(nQueens + "° queen inserted.");
-                System.out.println(notAvailablePositions.size() + " positions are not available.");
-                printBoard();
-            }
-        }
-    }
-
-    public void play() {
-        if (nQueens == size) {
-            printBoard();
-            System.out.println("FIN");
-        } else {
-            Random random = new Random();
-            int rowChild, columnChild;
-            rowChild = random.nextInt(size - 1);
-            columnChild = random.nextInt(size - 1);
-
-            Coord child = new Coord(rowChild, columnChild);
-            if (!notAvailablePositions.contains(child)) {
-                saveNotAvailablePosition(child);
-                board[child.row][child.column] = 'Q';
-                nQueens++;
-                printBoard();
-                System.out.println("Queens: " + nQueens);
-                play();
-            }
-        }
-    }
-
-    public void aux() {
-        if (nQueens == size) {
-            printBoard();
-            return;
-        } else {
-            for (int i = 0; i < size; i++) {
-                for (int j = 0; j < size; j++) {
-                    if (!notAvailablePositions.contains(new Coord(i, j))) {
-                        Coord child = new Coord(i, j);
-                        saveNotAvailablePosition(child);
-                        board[child.row][child.column] = 'Q';
-                        nQueens++;
-                        System.out.println(nQueens + "° queen inserted.");
-                        System.out.println(notAvailablePositions.size() + " positions are not available.");
-                        printBoard();
-                        aux();
-                    }
-                }
-            }
-        }
-    }
-
- */
 }
