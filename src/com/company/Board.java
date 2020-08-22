@@ -37,77 +37,69 @@ public class Board {
         }
         System.out.println("+-----".repeat(size) + "+");
     }
+    public boolean isValidPosition(Coord possibleQueen) { //Buscar espacio disponible
+        int column = possibleQueen.column;
+        int row = possibleQueen.row;
 
-    private boolean isValidPosition(Coord queen) {
-        int column = queen.column;
-        int row = queen.row;
+        for (int i = 0; i <= size - 1; i++) {
+           // Coord cordRow = new Coord(possibleQueen.row, i);
+           // Coord cordColumn = new Coord(i, possibleQueen.column);
 
-        for (int i = 0; i < size; i++) {
-            Coord cordRow = new Coord(queen.row, i);
-            Coord cordColumn = new Coord(i, queen.column);
-
-            if (queen.equals(cordRow)) {
-                //board[queen.row][i] = 'X';
+            if (board[row][i] == 'Q'){
                 return false;
             }
-            if (queen.equals(cordColumn)) {
-                //board[i][queen.column] = 'X';
+            if (board[i][column] == 'Q') {
                 return false;
             }
         }
         while (column >= 0 && row >= 0) { //Superior izquierdo
-            Coord topLeft = new Coord(row, column);
-            if (queen.equals(topLeft)) {
-                //board[row][column] = 'X';
+            // Coord topLeft = new Coord(row, column);
+            if (board[row][column] == 'Q') {
                 return false;
             }
             column--;
             row--;
         }
-        column = queen.column;
-        row = queen.row;
+        column = possibleQueen.column;
+        row = possibleQueen.row;
 
         while (column <= size - 1 && row <= size - 1) { // Inferior derecho
-            Coord lowerRight = new Coord(row, column);
-            if (queen.equals(lowerRight)) {
-                //board[row][column] = 'X';
+            // Coord lowerRight = new Coord(row, column);
+            if (board[row][column] == 'Q') {
                 return false;
             }
             column++;
             row++;
         }
 
-        column = queen.column;
-        row = queen.row;
+        column = possibleQueen.column;
+        row = possibleQueen.row;
 
         while (column >= 0 && row <= size - 1) { // inferior izquierdo
-            Coord lowerLeft = new Coord(row, column);
-            if (queen.equals(lowerLeft)) {
-                //board[row][column] = 'X';
+            // Coord lowerLeft = new Coord(row, column);
+            if (board[row][column] == 'Q') {
                 return false;
             }
             column--;
             row++;
         }
 
-        column = queen.column;
-        row = queen.row;
+        column = possibleQueen.column;
+        row = possibleQueen.row;
 
         while (column <= size - 1 && row >= 0) { //superior derecho
-            Coord topRight = new Coord(row, column);
-            if (queen.equals(topRight)) {
-                //board[row][column] = 'X';
+            //Coord topRight = new Coord(row, column);
+            if (board[row][column] == 'Q') {
                 return false;
             }
             column++;
             row--;
-
         }
         return true;
     }
 
     //backtrack method
-    private Coord backtrack(Coord position){
+    public Coord backtrack(Coord position){
         Coord lastPosition;
         int lastRow = position.row;
         int lastColumn = position.column;
