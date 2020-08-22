@@ -5,19 +5,11 @@ import java.util.*;
 public class Board {
 
     char[][] board;
-    char[][] lastBoard;
     int size;
     int nQueens = 0;
-    Set<Coord> notAvailablePositions = new HashSet<>();
-    List<Board> children = new ArrayList<>();
-
-    /*char [] leftDiagonal = new char[Integer.MAX_VALUE];
-    char [] rightDiagonal = new char[Integer.MAX_VALUE];
-    char [] availableColumns = new char[Integer.MAX_VALUE];*/
 
     public Board(int size) {
         board = new char[size][size];
-        lastBoard = new char[size][size];
         this.size = size;
     }
 
@@ -26,7 +18,6 @@ public class Board {
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
                     board[i][j] = ' ';
-                    lastBoard[i][j] = ' ';
                 }
             }
             System.out.println("Init game!");
@@ -113,6 +104,23 @@ public class Board {
 
         }
         return true;
+    }
+
+    //backtrack method
+    private Coord backtrack(Coord position){
+        Coord lastPosition;
+        int lastRow = position.row;
+        int lastColumn = position.column;
+        for(int i = lastRow; i >=0 ; i--){
+            for(int j = lastColumn; j >= 0; j--){
+                if(board[i][j] != ' '){ // if there is a queen, delete the last one
+                    board[i][j] = ' ';
+                    lastPosition = new Coord(i,j);
+                    return lastPosition;
+                }
+            }
+        }
+        return null;
     }
 
 }

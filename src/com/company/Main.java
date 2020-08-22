@@ -12,8 +12,8 @@ public class Main {
         if(size >= 4){
             Board board = new Board(size);
             board.initBoard();
-
-            //board.aux();
+            Coord initialQueen = new Coord(0,0);
+            board.setNQueens(initialQueen,false);
         }
     }
 }
