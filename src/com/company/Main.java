@@ -1,8 +1,5 @@
 package com.company;
 
-import java.sql.Array;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -15,7 +12,7 @@ public class Main {
         if(size >= 4){
             Board board = new Board(size);
             board.initBoard();
-            board.setQueens();
+
             //board.aux();
         }
     }
