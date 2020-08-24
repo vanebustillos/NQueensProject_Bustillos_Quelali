@@ -114,5 +114,28 @@ public class Board {
         }
         return null;
     }
-
+    public void setNQueens(Coord possiblePosition, boolean found){
+        if(!found) {
+            if (isValidPosition(possiblePosition)) {
+                board[possiblePosition.row][possiblePosition.column] = 'Q';
+                //nQueens++;
+                printBoard();
+                if(possiblePosition.row == size - 1){
+                //if (nQueens == size) {
+                    found = true;
+                    printBoard();
+                }
+                setNQueens(new Coord(possiblePosition.row + 1, 0), found);
+            } else{
+                while(possiblePosition.column <= size - 1){
+                    Coord lastPosition = backtrack(new Coord(possiblePosition.row, possiblePosition.column));
+                    //nQueens--;
+                    // possiblePosition.row = lastPosition.row;
+                    // possiblePosition.column = lastPosition.column;
+                    possiblePosition = lastPosition;
+                }
+                setNQueens(new Coord(possiblePosition.row, possiblePosition.column + 1 ), false);
+            }
+        }
+    }
 }

@@ -12,15 +12,16 @@ public class Main {
         if(size >= 4){
             Board board = new Board(size);
             board.initBoard();
-            //Coord initialQueen = new Coord(0,1);
-            board.board[0][1] = 'Q';
+            Coord initialQueen = new Coord(0,0);
+            /*board.board[0][1] = 'Q';
             board.board[2][2] = 'Q';
             board.printBoard();
             Coord coordBT = board.backtrack(new Coord(2,2));
             System.out.println(board.isValidPosition(coordBT));
             System.out.println("Row:" + coordBT.row + " Column: " + coordBT.column);
-            board.printBoard();
+            board.printBoard();*/
 
+           board.setNQueens(initialQueen, false);
         }
     }
 }
