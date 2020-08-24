@@ -13,7 +13,11 @@ public class Main {
         if(size >= 4){
             Board board = new Board(size);
             board.initBoard();
-            board.dfs(new Coord(0,0));
+
+            //board.dfs1(board);
+            board.dfs2(new Coord(0,0));  //with Backtrack method
+        } else {
+            throw new NullPointerException("The dimension must be at least 4.");
         }
     }
 }

@@ -15,7 +15,7 @@ public class Board {
         this.size = size;
     }
 
-    public void initBoard() {
+    public void initBoard(){
         if (size >= 4) {
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
@@ -94,21 +94,6 @@ public class Board {
         return true;
     }
 
-    public Coord backtrack(Coord position){
-        Coord lastPosition;
-        int lastRow = position.row;
-        int lastColumn = position.column;
-        for(int i = lastRow; i >=0 ; i--){
-            for(int j = lastColumn; j >= 0; j--){
-                if(board[i][j] != ' '){ // if there is a queen, delete the last one
-                    board[i][j] = ' ';
-                    lastPosition = new Coord(i,j);
-                    return lastPosition;
-                }
-            }
-        }
-        return position;
-    }
     private Board setQueen(Coord possiblePosition) {
         Board nextStep = new Board(size);
         if (isValidPosition(possiblePosition)) {
@@ -142,7 +127,9 @@ public class Board {
         }
         return children;
     }
-    public void dfsAux(Board initialBoard) {
+
+    //DFS (1) algorithm
+    public void dfs1(Board initialBoard) {
         LinkedList<Board> boards  = new LinkedList<>();
         boards.add(initialBoard);
         while (!boards.isEmpty()) {
@@ -154,7 +141,7 @@ public class Board {
                     lastBoard.printBoard();
                     System.out.println("Queen at: row:"+ queen.row +"  column: "+queen.column );
                 }*/
-                //lastBoard.printBoard();
+                lastBoard.printBoard();
                 break;
             }
             LinkedList<Board> newSuccessors = new LinkedList<>(lastBoard.successors());
@@ -162,34 +149,24 @@ public class Board {
         }
     }
 
-    public void aux(Coord possiblePosition, boolean found){
-        if(!found) {
-            if (isValidPosition(possiblePosition)) {
-                board[possiblePosition.row][possiblePosition.column] = 'Q';
-                nQueens++;
-                printBoard();
-                //if(possiblePosition.row == size - 1){
-                if (nQueens == size) {
-                    found = true;
-                    printBoard();
+    public Coord backtrack(Coord position){
+        Coord lastPosition;
+        int lastRow = position.row;
+        int lastColumn = position.column;
+        for(int i = lastRow; i >=0 ; i--){
+            for(int j = lastColumn; j >= 0; j--){
+                if(board[i][j] != ' '){ // if there is a queen, delete the last one
+                    board[i][j] = ' ';
+                    lastPosition = new Coord(i,j);
+                    return lastPosition;
                 }
-                //aux(new Coord(possiblePosition.row + 1, 0), found);
-                aux(new Coord(0, possiblePosition.column+1), found);
-            } else{
-                while(possiblePosition.column <= size - 1){
-                    Coord lastPosition = backtrack(new Coord(possiblePosition.row, possiblePosition.column));
-                    nQueens--;
-                    possiblePosition.row = lastPosition.row;
-                    possiblePosition.column = lastPosition.column;
-                    //possiblePosition = lastPosition;
-                }
-                //aux(new Coord(possiblePosition.row, possiblePosition.column + 1 ), false);
-                aux(new Coord(possiblePosition.row + 1, 0), false);
             }
         }
+        return position;
     }
 
-    public void dfs(Coord possiblePosition) {
+    //DFS (2) algorithm
+    public void dfs2(Coord possiblePosition) {
         if (nQueens == size) {
             System.out.println("SOLUCIÓN ENCONTRADA!...");
             printBoard();
@@ -199,13 +176,13 @@ public class Board {
                 board[possiblePosition.row][possiblePosition.column] = 'Q';
                 nQueens++;
                 printBoard();
-                aux2(new Coord(possiblePosition.row + 1, possiblePosition.column));
+                dfs2(new Coord(possiblePosition.row + 1, possiblePosition.column));
 
             } else {
                 if(possiblePosition.column < size - 1) {
-                    aux2(new Coord(possiblePosition.row, possiblePosition.column + 1));
+                    dfs2(new Coord(possiblePosition.row, possiblePosition.column + 1));
                 } else {
-                    aux2(new Coord(possiblePosition.row, 0));
+                    dfs2(new Coord(possiblePosition.row, 0));
                 }
             }
             if(possiblePosition.column == size - 1 && nQueens < size){
@@ -216,7 +193,7 @@ public class Board {
                     possiblePosition.row = lastPosition.row;
                     possiblePosition.column = lastPosition.column;
                 }
-                aux2(new Coord(possiblePosition.row, possiblePosition.column + 1 ));
+                dfs2(new Coord(possiblePosition.row, possiblePosition.column + 1 ));
             }
 
         }
