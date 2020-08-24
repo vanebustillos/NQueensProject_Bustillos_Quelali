@@ -13,7 +13,7 @@ public class Main {
         if(size >= 4){
             Board board = new Board(size);
             board.initBoard();
-            board.dfs(board);
+            board.dfs(new Coord(0,0));
         }
     }
 }

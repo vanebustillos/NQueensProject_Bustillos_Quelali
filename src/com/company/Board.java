@@ -8,6 +8,7 @@ public class Board {
     int size;
     int nQueens = 0;
     Board parent;
+    List<Coord> queensPossition = new ArrayList<>(size);
 
     public Board(int size) {
         board = new char[size][size];
@@ -106,15 +107,16 @@ public class Board {
                 }
             }
         }
-        return null;
+        return position;
     }
-    private Board setNQueen(Coord possiblePosition) {
+    private Board setQueen(Coord possiblePosition) {
         Board nextStep = new Board(size);
         if (isValidPosition(possiblePosition)) {
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
                     if (i == possiblePosition.row && j == possiblePosition.column) {
                         nextStep.board[i][j] = 'Q';
+                        nextStep.queensPossition.add(new Coord(i,j));/////
                         //nQueens ++;
                     } else {
                         nextStep.board[i][j] = this.board[i][j];
@@ -134,24 +136,89 @@ public class Board {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 if (this.board[i][j] == ' ') {
-                    children.add(setNQueen(new Coord(i, j)));
+                    children.add(setQueen(new Coord(i, j)));
                 }
             }
         }
         return children;
     }
-    public void dfs(Board initialBoard) {
+    public void dfsAux(Board initialBoard) {
         LinkedList<Board> boards  = new LinkedList<>();
         boards.add(initialBoard);
         while (!boards.isEmpty()) {
             Board lastBoard = boards.removeFirst();
             if (lastBoard.nQueens == size) {
-                System.out.println("Found Solution");
-                lastBoard.printBoard();
+                System.out.println("Solution was found!!");
+               /* for (Coord queen: lastBoard.queensPossition) {
+                    lastBoard.board[queen.row][queen.column] = 'Q';
+                    lastBoard.printBoard();
+                    System.out.println("Queen at: row:"+ queen.row +"  column: "+queen.column );
+                }*/
+                //lastBoard.printBoard();
                 break;
             }
             LinkedList<Board> newSuccessors = new LinkedList<>(lastBoard.successors());
             boards.addAll(0, newSuccessors);
+        }
+    }
+
+    public void aux(Coord possiblePosition, boolean found){
+        if(!found) {
+            if (isValidPosition(possiblePosition)) {
+                board[possiblePosition.row][possiblePosition.column] = 'Q';
+                nQueens++;
+                printBoard();
+                //if(possiblePosition.row == size - 1){
+                if (nQueens == size) {
+                    found = true;
+                    printBoard();
+                }
+                //aux(new Coord(possiblePosition.row + 1, 0), found);
+                aux(new Coord(0, possiblePosition.column+1), found);
+            } else{
+                while(possiblePosition.column <= size - 1){
+                    Coord lastPosition = backtrack(new Coord(possiblePosition.row, possiblePosition.column));
+                    nQueens--;
+                    possiblePosition.row = lastPosition.row;
+                    possiblePosition.column = lastPosition.column;
+                    //possiblePosition = lastPosition;
+                }
+                //aux(new Coord(possiblePosition.row, possiblePosition.column + 1 ), false);
+                aux(new Coord(possiblePosition.row + 1, 0), false);
+            }
+        }
+    }
+
+    public void dfs(Coord possiblePosition) {
+        if (nQueens == size) {
+            System.out.println("SOLUCIÓN ENCONTRADA!...");
+            printBoard();
+            return;
+        } else {
+            if (isValidPosition(possiblePosition)) {
+                board[possiblePosition.row][possiblePosition.column] = 'Q';
+                nQueens++;
+                printBoard();
+                aux2(new Coord(possiblePosition.row + 1, possiblePosition.column));
+
+            } else {
+                if(possiblePosition.column < size - 1) {
+                    aux2(new Coord(possiblePosition.row, possiblePosition.column + 1));
+                } else {
+                    aux2(new Coord(possiblePosition.row, 0));
+                }
+            }
+            if(possiblePosition.column == size - 1 && nQueens < size){
+                while (possiblePosition.column <= size - 1 ) {
+                    Coord lastPosition = backtrack(new Coord(possiblePosition.row, possiblePosition.column));
+                    //System.out.println("BACKTRACKING...");
+                    nQueens--;
+                    possiblePosition.row = lastPosition.row;
+                    possiblePosition.column = lastPosition.column;
+                }
+                aux2(new Coord(possiblePosition.row, possiblePosition.column + 1 ));
+            }
+
         }
     }
 
